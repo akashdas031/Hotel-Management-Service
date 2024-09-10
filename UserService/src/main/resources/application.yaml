@@ -1,0 +1,99 @@
+server:
+  port: 8808
+spring:
+  application:
+    name: USER-SERVICE
+  datasource: 
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
+    url: jdbc:sqlserver://AAKASH\\SQL2022:1433;databaseName=Microservices;encrypt=true;trustServerCertificate=true
+    username: sa
+    password: Akash@Sql
+    
+    
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+    properties:
+      hibernate: 
+        dialect: org.hibernate.dialect.SQLServer2012Dialect
+   
+  config:
+    import: optional:configserver:http://localhost:8588
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-46450146.okta.com/oauth2/default
+          
+      client:
+        registration:
+          my-internal-client:
+           provider: okta
+           authorization-grant-type: client_credentials
+           client-id: 0oafu07zeeGPy5Kmn5d7
+           client-secret: _TkHCVgMBM59OH2Ai83A1HndnZO2Z-aEGj1oMu-6LfkF6Vm5rLOYq5jlDzopU1rt
+           scope: internal
+        provider:
+          okta:
+            issuer-uri: https://dev-46450146.okta.com/oauth2/default
+            
+          
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  
+#  client:
+#    fetch-registry: true
+#    
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelCircuit:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED 
+      alluserCircuit:
+        register-health-indicator: true 
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: count-based  
+  ratelimiter:
+    instances:
+      allUserRate:
+        limit-refresh-period: 4s
+        limit-for-period: 2
+        timeout-duration: 0s
+    
+okta:
+  oauth2:
+    issuer: https://dev-46450146.okta.com/oauth2/default
+    audience: api://default
