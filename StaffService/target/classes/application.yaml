@@ -1,0 +1,50 @@
+server:
+  port: 8488
+  
+spring:
+  application:
+    name: STAFF-SERVICE
+  datasource:
+    url: jdbc:postgresql://AAKASH:5432/StaffService
+    username: postgres
+    password: Akash@Sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  config:
+    import: optional:configserver:http://localhost:8588
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-46450146.okta.com/oauth2/default
+      client:
+        registration:
+          rating-internal-client:
+            provider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oafu07zeeGPy5Kmn5d7
+            client-secret: _TkHCVgMBM59OH2Ai83A1HndnZO2Z-aEGj1oMu-6LfkF6Vm5rLOYq5jlDzopU1rt
+        provider:
+          okta: 
+            issuer-uri: https://dev-46450146.okta.com/oauth2/default  
+#eureka:
+#  instance:
+#    prefer-ip-address: true
+#  client:
+#    fetch-registry: true
+#    
+#    register-with-eureka: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+#  
+okta:
+  oauth2:
+    issuer: https://dev-46450146.okta.com/oauth2/default
+    audience: api://default      
