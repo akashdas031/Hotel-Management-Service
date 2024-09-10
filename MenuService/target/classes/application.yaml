@@ -1,0 +1,95 @@
+server:
+  port: 8688
+  
+spring:
+  application:
+    name: MENU-SERVER
+  datasource:
+    url: jdbc:postgresql://AAKASH:5432/MenuServer
+    username: postgres
+    password: Akash@Sql
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  config:
+    import: optional:configserver:http://localhost:8588
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://dev-46450146.okta.com/oauth2/default
+      client:
+        registration:
+          menu-internal-client: 
+            prvider: okta
+            authorization-grant-type: client_credentials
+            scope: internal
+            client-id: 0oafu07zeeGPy5Kmn5d7
+            client-secret: _TkHCVgMBM59OH2Ai83A1HndnZO2Z-aEGj1oMu-6LfkF6Vm5rLOYq5jlDzopU1rt
+        provider:
+          okta:
+            issuer-uri: https://dev-46450146.okta.com/oauth2/default
+        
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+      
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: always
+resilience4j:
+  circuitbreaker:
+    instances:
+      menuItemCircuitBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+        
+      menuItem:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+        
+      hotelMenu:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: COUNT_BASED
+  retry:
+    instances:
+      hotelRetry:
+        max-attempts: 3
+        wait-duration: 5s
+        
+okta:
+  oauth2:
+    issuer: https://dev-46450146.okta.com/oauth2/default
+    audience: api://default
+        
+        
+        
