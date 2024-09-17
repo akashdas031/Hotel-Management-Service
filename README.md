@@ -102,8 +102,7 @@ The *Hotel Management Microservices Application* is a comprehensive system desig
 
 ### Prerequisites
 - *JDK 17+*
-- *Maven 3.6+*
-- *Docker* (for running the databases as containers)
+- *Maven 3.6+
 - *Okta Developer Account* (for OAuth2 authentication)
 - *Eureka Server* (for service registry)
 
@@ -119,34 +118,19 @@ The *Hotel Management Microservices Application* is a comprehensive system desig
    - Create an *Okta* developer account.
    - Set up an application in Okta and configure OAuth2 credentials in application.yml for each service.
 
-3. *Run Databases*:
-   - Use Docker to run the different databases:
-     - *MS SQL*:
-       bash
-       docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 -d mcr.microsoft.com/mssql/server:2019-latest
-       
-     - *PostgreSQL*:
-       bash
-       docker run --name hotel-postgres -e POSTGRES_PASSWORD=yourpassword -p 5432:5432 -d postgres
-       
-     - *MongoDB*:
-       bash
-       docker run --name menu-mongo -p 27017:27017 -d mongo
-       
-
-4. *Run the Eureka Server*:
+3. *Run the Eureka Server*:
    - Navigate to the eureka-server directory and run:
      bash
      mvn spring-boot:run
      
 
-5. *Run Individual Microservices*:
+4. *Run Individual Microservices*:
    - For each service (User, Hotel, Menu, Staff, Items, Rating), navigate to the corresponding directory and run:
      bash
      mvn spring-boot:run
      
 
-6. *Access the API Gateway*:
+5. *Access the API Gateway*:
    - Open your browser and go to:
      
      http://localhost:8080
